@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Main {
     public static void main(String[] args) {
@@ -77,6 +79,32 @@ public class Main {
         modifiedString.insert(insertIndex, " " + randomToken);
 
         System.out.println("\n--- Строка после добавления случайной лексемы ---");
+        System.out.println(modifiedString);
+        String digitSubstringRegex = "\\d\\S*";
+        Pattern pattern = Pattern.compile(digitSubstringRegex);
+        Matcher matcher = pattern.matcher(modifiedString);
+        String shortestSubstring = null;
+        int shortestLength = Integer.MAX_VALUE;
+        while (matcher.find()) {
+            String found = matcher.group();
+            if (found.length() < shortestLength) {
+                shortestLength = found.length();
+                shortestSubstring = found;
+            }
+        }
+        if (shortestSubstring != null) {
+            int startIndex = modifiedString.indexOf(shortestSubstring);
+            if (startIndex != -1)
+            {
+                modifiedString.delete(startIndex, startIndex + shortestLength);
+                System.out.println("\n--- Найдена и удалена самая короткая подстрока, начинающаяся с цифры ---");
+                System.out.println("Удаленная подстрока: '" + shortestSubstring + "'");
+            }
+        } else {
+            System.out.println("\n--- Подстрок, начинающихся с цифры, не найдено ---");
+        }
+
+        System.out.println("\n--- Итоговая строка ---");
         System.out.println(modifiedString);
     }
 }
